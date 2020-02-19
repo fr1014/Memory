@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Memroy</string>
+    <string name="account">请输入账号</string>
+    <string name="password">请输入密码</string>
+    <string name="add_folder">添加文件夹</string>
+    <string name="et_hint_name">文件夹名称（必填）</string>
+    <string name="et_hint_message">文件夹描述（选填）</string>
+    <string name="image_folder">图片收藏夹</string>
+    <string name="tv_add_ivfolder">点击此处创建新的收藏夹</string>
+</resources>
