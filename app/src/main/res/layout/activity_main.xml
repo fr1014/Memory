@@ -30,16 +30,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
-    <include
-        android:id="@+id/viewpager2"
-        layout="@layout/fragment_viewpager_image"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline8" />
+<!--    <include-->
+<!--        android:id="@+id/viewpager2"-->
+<!--        layout="@layout/fragment_viewpager_image"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:visibility="invisible"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/guideline9"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@id/guideline8" />-->
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
@@ -66,15 +66,15 @@
             android:src="@drawable/ic_add_circle" />
     </androidx.cardview.widget.CardView>
 
-    <!--    <androidx.fragment.app.FragmentContainerView-->
-    <!--        android:id="@+id/fragment_image_folder"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@+id/guideline9"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="@id/guideline8"-->
-    <!--        android:visibility="invisible"/>-->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_image_folder"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guideline8"
+            android:visibility="invisible"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"

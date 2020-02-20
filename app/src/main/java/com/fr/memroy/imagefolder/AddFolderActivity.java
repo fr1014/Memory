@@ -20,8 +20,12 @@ import com.fr.memroy.R;
 import com.fr.memroy.data.room.AppDataBase;
 import com.fr.memroy.data.room.dao.ImageFolderDao;
 import com.fr.memroy.data.room.entity.ImageFolderEntity;
+import com.fr.memroy.rx.RxSchedulers;
+import com.fr.memroy.rx.SimpleConsumer;
 
 import java.util.List;
+
+import io.reactivex.Observable;
 
 public class AddFolderActivity extends AppCompatActivity implements View.OnClickListener {
     private AppDataBase appDataBase;
@@ -62,7 +66,15 @@ public class AddFolderActivity extends AppCompatActivity implements View.OnClick
                 if (initImageFolder()) {
                     Log.d(TAG, "onClick: " + name + imagePath);
                     ImageFolderEntity imageFolderEntity = new ImageFolderEntity(name, imagePath, " ");
-                    imageFolderDao.insertImageFolder(imageFolderEntity);
+
+                    Observable.just(imageFolderEntity)
+                            .compose(RxSchedulers.applyIO())
+                            .subscribe(new SimpleConsumer<ImageFolderEntity>() {
+                                @Override
+                                public void accept(ImageFolderEntity imageFolderEntity) {
+                                    imageFolderDao.insertImageFolder(imageFolderEntity);
+                                }
+                            });
                     finish();
                 }
                 break;
