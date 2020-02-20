@@ -7,4 +7,5 @@
     <color name="btn_normal">#03A9F4</color>
     <color name="btn_pressed">#4473BD</color>
     <color name="bg_home">#fafafa</color>
+    <color name="bg_black">#111010</color>
 </resources>

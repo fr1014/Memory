@@ -49,6 +49,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/bg_black"
         app:cardCornerRadius="@dimen/card_radius"
         app:cardElevation="@dimen/card_elevation"
         app:layout_constraintBottom_toTopOf="@+id/guideline9"

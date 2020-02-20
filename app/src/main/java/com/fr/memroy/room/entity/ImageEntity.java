@@ -1,10 +1,10 @@
 package com.fr.memroy.room.entity;
 
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
 
 import com.fr.mediafile.bean.Image;
 
@@ -24,11 +24,11 @@ import com.fr.mediafile.bean.Image;
                 childColumns = "imageId", onDelete = ForeignKey.CASCADE)},
         indices = {@Index(value = "imageId")
         })
-@TypeConverters(ImageConverters.class)
 public class ImageEntity {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int imageId;
+    @Embedded
     private Image image;
 
     public ImageEntity(int imageId, Image image) {

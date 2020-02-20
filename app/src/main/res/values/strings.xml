@@ -6,5 +6,5 @@
     <string name="et_hint_name">文件夹名称（必填）</string>
     <string name="et_hint_message">文件夹描述（选填）</string>
     <string name="image_folder">图片收藏夹</string>
-    <string name="tv_add_ivfolder">点击此处创建新的收藏夹</string>
+    <string name="tv_add_ivfolder">编辑此收藏夹</string>
 </resources>
