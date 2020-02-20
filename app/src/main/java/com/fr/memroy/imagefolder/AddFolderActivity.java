@@ -17,9 +17,9 @@ import com.fr.mediafile.imageselect.ImageSelectActivity;
 import com.fr.mediafile.utils.CommonUtils;
 import com.fr.mediafile.utils.ImageSelector;
 import com.fr.memroy.R;
-import com.fr.memroy.room.AppDataBase;
-import com.fr.memroy.room.dao.ImageFolderDao;
-import com.fr.memroy.room.entity.ImageFolderEntity;
+import com.fr.memroy.data.room.AppDataBase;
+import com.fr.memroy.data.room.dao.ImageFolderDao;
+import com.fr.memroy.data.room.entity.ImageFolderEntity;
 
 import java.util.List;
 
