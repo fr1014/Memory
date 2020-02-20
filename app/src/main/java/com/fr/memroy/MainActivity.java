@@ -1,7 +1,6 @@
 package com.fr.memroy;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,37 +9,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 
+import com.fr.MyApplication;
 import com.fr.memroy.imagefolder.AddFolderActivity;
-import com.fr.memroy.imagefolder.banner.Banner;
-import com.fr.memroy.imagefolder.banner.ImageViewpagerAdapter;
-import com.fr.memroy.imagefolder.banner.ScaleInTransformer;
-import com.fr.memroy.data.room.AppDataBase;
-import com.fr.memroy.data.room.dao.ImageFolderDao;
-import com.fr.memroy.data.room.entity.ImageFolderEntity;
+import com.fr.memroy.imagefolder.ImageFolderFragment;
 import com.fr.memroy.utils.CommonUtils;
 import com.fr.mypermission.Permission;
 import com.fr.mypermission.PermissionListener;
 import com.fr.mypermission.PermissionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ImageFolderFragment.ImageFragmentListener {
 
     private CardView cardView;
-    private Context mContext;
-    private LiveData<List<ImageFolderEntity>> imageFolderLive;
-    private AppDataBase appDataBase;
-    private ImageFolderDao imageFolderDao;
-    private ViewPager2 viewPager2;
-    private ImageViewpagerAdapter adapter;
     private TextView addIVFolder;
-
-    private static final String TAG = "MainActivity";
+    private FragmentContainerView imageContainerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,41 +34,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CommonUtils.setStatusBar(this, getColor(R.color.bg_home));
 
         cardView = findViewById(R.id.card_view);
-        viewPager2 = findViewById(R.id.viewpager2);
         addIVFolder = findViewById(R.id.tv_add_ivfolder);
-        mContext = this;
-
-        appDataBase = AppDataBase.getInstance(this);
-        imageFolderDao = appDataBase.getImageFolderDao();
-        imageFolderLive = imageFolderDao.getAllImageFoldersLive();
-
-        adapter = new ImageViewpagerAdapter(mContext);
-        viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
-        viewPager2.setAdapter(adapter);
-        new Banner(viewPager2)
-                .setPageMargin(30, 25)
-                .setPageTransformer(new ScaleInTransformer());
+        imageContainerView = findViewById(R.id.fragment_image_folder);
 
         cardView.setOnClickListener(this);
         addIVFolder.setOnClickListener(this);
 
-        imageFolderLive.observe(this, new Observer<List<ImageFolderEntity>>() {
-            @Override
-            public void onChanged(List<ImageFolderEntity> imageFolderEntities) {
-                if (imageFolderEntities.size() != 0) {
-                    cardView.setVisibility(View.GONE);
-                    addIVFolder.setVisibility(View.VISIBLE);
-                    viewPager2.setVisibility(View.VISIBLE);
-                    List<String> imagePaths = new ArrayList<>();
-                    for (ImageFolderEntity entity : imageFolderEntities) {
-                        imagePaths.add(entity.getImagePath());
-                    }
-                    adapter.setData(imagePaths);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
+        initImageFragment();
+    }
 
+    public void initImageFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ImageFolderFragment fragment = new ImageFolderFragment();
+        fragment.setImageListener(this);
+        fragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_image_folder,fragment)
+                .commit();
     }
 
     @Override
@@ -104,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             @Override
                             public void onCancel(int requestCode, String... permission) {
-                                PermissionUtils.goSetting(mContext);
+                                PermissionUtils.goSetting(MyApplication.getInstance());
                             }
                         }).send();
                 break;
@@ -119,5 +85,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Permission.onRequestPermissionResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void notifyData() {
+        cardView.setVisibility(View.GONE);
+        addIVFolder.setVisibility(View.VISIBLE);
+        imageContainerView.setVisibility(View.VISIBLE);
     }
 }
