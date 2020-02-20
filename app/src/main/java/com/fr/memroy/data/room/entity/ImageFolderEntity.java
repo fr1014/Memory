@@ -1,4 +1,4 @@
-package com.fr.memroy.room.entity;
+package com.fr.memroy.data.room.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

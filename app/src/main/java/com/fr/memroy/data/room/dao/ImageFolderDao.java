@@ -1,4 +1,4 @@
-package com.fr.memroy.room.dao;
+package com.fr.memroy.data.room.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.fr.memroy.room.entity.ImageFolderEntity;
+import com.fr.memroy.data.room.entity.ImageFolderEntity;
 
 import java.util.List;
 

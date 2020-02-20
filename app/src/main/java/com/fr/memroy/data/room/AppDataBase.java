@@ -1,4 +1,4 @@
-package com.fr.memroy.room;
+package com.fr.memroy.data.room;
 
 import android.content.Context;
 
@@ -6,10 +6,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.fr.memroy.room.dao.ImageDao;
-import com.fr.memroy.room.dao.ImageFolderDao;
-import com.fr.memroy.room.entity.ImageEntity;
-import com.fr.memroy.room.entity.ImageFolderEntity;
+import com.fr.memroy.data.room.dao.ImageDao;
+import com.fr.memroy.data.room.dao.ImageFolderDao;
+import com.fr.memroy.data.room.entity.ImageEntity;
+import com.fr.memroy.data.room.entity.ImageFolderEntity;
 
 /**
  * 创建时间:2020/2/18
@@ -24,12 +24,12 @@ public abstract class AppDataBase extends RoomDatabase {
     public static synchronized AppDataBase getInstance(final Context context) {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDataBase.class, "app_database")
-//                    .allowMainThreadQueries()
                     .build();
         }
         return INSTANCE;
     }
 
     public abstract ImageFolderDao getImageFolderDao();
+
     public abstract ImageDao getImageDao();
 }
