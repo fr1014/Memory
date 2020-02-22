@@ -1,83 +1,90 @@
 package com.fr.memroy;
 
 import android.Manifest;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
 import com.fr.MyApplication;
+import com.fr.memroy.base.BaseActivity;
 import com.fr.memroy.imagefolder.AddFolderActivity;
-import com.fr.memroy.imagefolder.ImageFolderFragment;
-import com.fr.memroy.utils.CommonUtils;
+import com.fr.memroy.imagefolder.banner.ImageFolderFragment;
+import com.fr.memroy.imagefolder.listfolder.ManageIvFolderActivity;
 import com.fr.mypermission.Permission;
 import com.fr.mypermission.PermissionListener;
 import com.fr.mypermission.PermissionUtils;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ImageFolderFragment.ImageFragmentListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, ImageFolderFragment.ImageFragmentListener {
 
     private CardView cardView;
     private TextView addIVFolder;
+    private TextView tvIVFolder;
     private FragmentContainerView imageContainerView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
 
-        CommonUtils.setStatusBar(this, getColor(R.color.bg_home));
+    @Override
+    protected void initView() {
 
-        cardView = findViewById(R.id.card_view);
+        cardView = findViewById(R.id.add_image);
         addIVFolder = findViewById(R.id.tv_add_ivfolder);
+        tvIVFolder = findViewById(R.id.tv_image);
         imageContainerView = findViewById(R.id.fragment_image_folder);
 
         cardView.setOnClickListener(this);
         addIVFolder.setOnClickListener(this);
+        tvIVFolder.setOnClickListener(this);
 
         initImageFragment();
+    }
+
+    @Override
+    protected void initData() {
+        initPermission();
+    }
+
+    private void initPermission() {
+        Permission.with(MainActivity.this)
+                .requestCode(100)
+                .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .callBack(new PermissionListener() {
+                    @Override
+                    public void onPermit(int requestCode, String... permission) {
+                        //已获得权限
+                    }
+
+                    @Override
+                    public void onCancel(int requestCode, String... permission) {
+                        PermissionUtils.goSetting(MyApplication.getInstance());
+                    }
+                }).send();
     }
 
     public void initImageFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         ImageFolderFragment fragment = new ImageFolderFragment();
-        fragment.setImageListener(this);
         fragmentManager
                 .beginTransaction()
-                .add(R.id.fragment_image_folder,fragment)
+                .replace(R.id.fragment_image_folder,fragment)
                 .commit();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.card_view:
-                Permission.with(MainActivity.this)
-                        .requestCode(100)
-                        .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .callBack(new PermissionListener() {
-                            @Override
-                            public void onPermit(int requestCode, String... permission) {
-                                //已获得权限
-                                Intent intent = new Intent(MainActivity.this, AddFolderActivity.class);
-                                startActivity(intent);
-                            }
-
-                            @Override
-                            public void onCancel(int requestCode, String... permission) {
-                                PermissionUtils.goSetting(MyApplication.getInstance());
-                            }
-                        }).send();
-                break;
+            case R.id.add_image:
             case R.id.tv_add_ivfolder:
-                //已获得权限
-                Intent intent = new Intent(MainActivity.this, AddFolderActivity.class);
-                startActivity(intent);
+                startActivity(MainActivity.this, AddFolderActivity.class);
+                break;
+            case R.id.tv_image:
+                startActivity(MainActivity.this, ManageIvFolderActivity.class);
                 break;
         }
     }
