@@ -23,7 +23,7 @@ public class CustomItemDecoration extends RecyclerView.ItemDecoration {
 
     public CustomItemDecoration(){
         mPaint = new Paint();
-        mPaint.setColor(Color.WHITE);
+        mPaint.setColor(Color.BLACK);   //分割线默认为黑色
         mDividerHeight = 3; //默认分割线的高度为3px
     }
 
