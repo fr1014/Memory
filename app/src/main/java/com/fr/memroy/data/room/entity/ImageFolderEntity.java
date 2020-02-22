@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey;
  * 邮箱:1546352238@qq.com
  */
 @Entity(tableName = "image_folder")
-public class ImageFolderEntity {
+public class ImageFolderEntity{
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -59,4 +59,5 @@ public class ImageFolderEntity {
     public void setMessage(String message) {
         this.message = message;
     }
+
 }
