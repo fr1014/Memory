@@ -24,7 +24,8 @@
             android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".MainActivity"
-            android:launchMode="standard">
+            android:launchMode="standard"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
