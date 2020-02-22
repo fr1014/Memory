@@ -49,7 +49,14 @@ public class ImageViewpagerAdapter extends RecyclerView.Adapter<ImageViewpagerAd
             Glide.with(context)
                     .load(imagePaths.get(position))
                     .into(holder.imageView);
+            holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
