@@ -7,5 +7,9 @@
     <string name="et_hint_message">文件夹描述（选填）</string>
     <string name="image_folder">图片收藏夹</string>
     <string name="audio_folder">视频收藏夹</string>
-    <string name="tv_add_folder">编辑此收藏夹</string>
+    <string name="tv_add_folder">添加收藏夹</string>
+    <string name="manage">管理</string>
+    <string name="update">更新</string>
+    <string name="delete">删除</string>
+    <string name="manage_folder">管理收藏夹</string>
 </resources>

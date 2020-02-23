@@ -100,4 +100,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         addIVFolder.setVisibility(View.VISIBLE);
         imageContainerView.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void notifyNoData() {
+        cardView.setVisibility(View.VISIBLE);
+        addIVFolder.setVisibility(View.GONE);
+        imageContainerView.setVisibility(View.GONE);
+    }
 }

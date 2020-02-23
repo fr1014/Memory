@@ -58,12 +58,16 @@ public class ImageFolderFragment extends BaseFragment {
                 }
                 adapter.setData(imagePaths);
                 adapter.notifyDataSetChanged();
+            }else {
+                viewPager2.setVisibility(View.GONE);
+                listener.notifyNoData();
             }
         });
     }
 
     public interface ImageFragmentListener {
         void notifyData();
+        void notifyNoData();
     }
 
     @Override

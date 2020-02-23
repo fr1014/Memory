@@ -25,7 +25,7 @@ public interface ImageFolderDao {
     void updateImageFolder(ImageFolderEntity imageFolder);
 
     @Delete
-    void deleteImageFolder(ImageFolderEntity imageFolder);
+    void deleteImageFolder(ImageFolderEntity...imageFolder);
 
     @Query("SELECT * FROM image_folder ORDER BY ID DESC")
     LiveData<List<ImageFolderEntity>> getAllImageFoldersLive();
