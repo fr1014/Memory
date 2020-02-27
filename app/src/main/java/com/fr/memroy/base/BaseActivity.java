@@ -30,13 +30,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         dataBase = MyApplication.getInstance().getDataBase();
 
         initView();
-        initData();
+        initData(savedInstanceState);
     }
 
     protected abstract int getLayoutId();
 
     protected abstract void initView();
-    protected abstract void initData();
+    protected abstract void initData(Bundle savedInstanceState);
 
     protected void startActivity(Activity activity,Class clazz){
         Intent intent = new Intent(activity,clazz);

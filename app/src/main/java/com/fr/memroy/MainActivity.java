@@ -1,6 +1,7 @@
 package com.fr.memroy;
 
 import android.Manifest;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -46,7 +47,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    protected void initData() {
+    protected void initData(Bundle savedInstanceState) {
         initPermission();
     }
 

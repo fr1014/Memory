@@ -1,5 +1,6 @@
 package com.fr.memroy.imagefolder.listfolder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.fr.mediafile.utils.CommonUtils;
 import com.fr.memroy.R;
 import com.fr.memroy.data.room.entity.ImageFolderEntity;
+import com.fr.memroy.imagefolder.AddFolderActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,13 +78,6 @@ public class ListFolderAdapter extends RecyclerView.Adapter<ListFolderAdapter.Vi
                 .with(context)
                 .load(imageFolderEntity.getImagePath())
                 .into(holder.imageView);
-//        holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                listener.delete(imageFolderEntities.get(holder.getAdapterPosition()));
-//                return true;
-//            }
-//        });
         if (visibly) {
             holder.selected.setVisibility(View.GONE);
             holder.unSelected.setVisibility(View.VISIBLE);
@@ -112,6 +107,17 @@ public class ListFolderAdapter extends RecyclerView.Adapter<ListFolderAdapter.Vi
                     holder.unSelected.setVisibility(View.GONE);
                     holder.selected.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = imageFolderEntity.getId();
+                String imgPath = imageFolderEntity.getImagePath();
+                String name = imageFolderEntity.getName();
+                String message = imageFolderEntity.getMessage();
+                AddFolderActivity.startActivity((Activity) context,id,imgPath,name,message);
             }
         });
     }

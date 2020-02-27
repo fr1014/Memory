@@ -1,5 +1,6 @@
 package com.fr.memroy.imagefolder.listfolder;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,7 +27,7 @@ public class ManageIvFolderActivity extends BaseActivity implements ListFolderAd
     private ImageFolderDao imageFolderDao;
     private ConstraintLayout manageLayout;
     private TextView tvManage;
-    private TextView tvUpdate;
+    private TextView tvCancel;
     private TextView tvDelete;
 
     @Override
@@ -36,6 +37,7 @@ public class ManageIvFolderActivity extends BaseActivity implements ListFolderAd
 
     @Override
     protected void initView() {
+
         initToolbar();
         initRecyclerView();
         initManageView();
@@ -43,10 +45,10 @@ public class ManageIvFolderActivity extends BaseActivity implements ListFolderAd
 
     private void initManageView() {
         manageLayout = findViewById(R.id.cl_manage);
-        tvUpdate = findViewById(R.id.tv_update);
         tvDelete = findViewById(R.id.tv_delete);
-        tvUpdate.setOnClickListener(this);
+        tvCancel = findViewById(R.id.tv_cancel);
         tvDelete.setOnClickListener(this);
+        tvCancel.setOnClickListener(this);
     }
 
     private void initToolbar() {
@@ -79,7 +81,7 @@ public class ManageIvFolderActivity extends BaseActivity implements ListFolderAd
     }
 
     @Override
-    protected void initData() {
+    protected void initData(Bundle savedInstanceState) {
         imageFolderDao = dataBase.getImageFolderDao();
 
         imageFolderDao
@@ -109,9 +111,15 @@ public class ManageIvFolderActivity extends BaseActivity implements ListFolderAd
         switch (v.getId()) {
             case R.id.tv_manage:
                 adapter.setSelectVisible(true);
+                tvManage.setVisibility(View.INVISIBLE);
+                tvCancel.setVisibility(View.VISIBLE);
                 manageLayout.setVisibility(View.VISIBLE);
                 break;
-            case R.id.tv_update:
+            case R.id.tv_cancel:
+                adapter.setSelectVisible(false);
+                tvManage.setVisibility(View.VISIBLE);
+                tvCancel.setVisibility(View.INVISIBLE);
+                manageLayout.setVisibility(View.INVISIBLE);
                 break;
             case R.id.tv_delete:
                 if (adapter.delete()) {
