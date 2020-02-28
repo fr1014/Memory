@@ -17,8 +17,8 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".imagefolder.listfolder.ManageIvFolderActivity"></activity>
-        <activity android:name=".imagefolder.ViewImageActivity" />
-        <activity android:name=".imagefolder.AddFolderActivity" />
+        <activity android:name=".imagefolder.images.ViewImageActivity" />
+        <activity android:name=".imagefolder.listfolder.AddFolderActivity" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/NoActionBarTheme" />

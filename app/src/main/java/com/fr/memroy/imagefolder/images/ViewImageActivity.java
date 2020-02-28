@@ -1,4 +1,4 @@
-package com.fr.memroy.imagefolder;
+package com.fr.memroy.imagefolder.images;
 
 import android.os.Bundle;
 

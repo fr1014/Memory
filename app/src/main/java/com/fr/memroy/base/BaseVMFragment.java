@@ -17,7 +17,7 @@ import com.fr.memroy.data.room.AppDataBase;
  * 作者:fr
  * 邮箱:1546352238@qq.com
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseVMFragment extends Fragment {
     protected AppDataBase dataBase;
 
     @Nullable

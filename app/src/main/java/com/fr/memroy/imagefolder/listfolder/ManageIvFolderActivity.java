@@ -4,27 +4,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fr.mediafile.imageselect.CustomItemDecoration;
 import com.fr.memroy.R;
-import com.fr.memroy.base.BaseActivity;
-import com.fr.memroy.data.room.dao.ImageFolderDao;
+import com.fr.memroy.base.BaseVMActivity;
 import com.fr.memroy.data.room.entity.ImageFolderEntity;
-import com.fr.memroy.rx.RxSchedulers;
-import com.fr.memroy.rx.SimpleConsumer;
 
 import java.util.List;
 
-import io.reactivex.Observable;
-
-public class ManageIvFolderActivity extends BaseActivity implements ListFolderAdapter.ListFolderListener, View.OnClickListener {
+public class ManageIvFolderActivity extends BaseVMActivity<ImageFolderViewModel> implements ListFolderAdapter.ListFolderListener, View.OnClickListener {
     private ListFolderAdapter adapter;
-    private ImageFolderDao imageFolderDao;
     private ConstraintLayout manageLayout;
     private TextView tvManage;
     private TextView tvCancel;
@@ -37,36 +30,18 @@ public class ManageIvFolderActivity extends BaseActivity implements ListFolderAd
 
     @Override
     protected void initView() {
-
-        initToolbar();
-        initRecyclerView();
+        initToolbar(findViewById(R.id.toolbar));
         initManageView();
+        initRecyclerView();
     }
 
     private void initManageView() {
+        tvManage = findViewById(R.id.tv_manage);
         manageLayout = findViewById(R.id.cl_manage);
         tvDelete = findViewById(R.id.tv_delete);
         tvCancel = findViewById(R.id.tv_cancel);
         tvDelete.setOnClickListener(this);
         tvCancel.setOnClickListener(this);
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        tvManage = findViewById(R.id.tv_manage);
-
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     private void initRecyclerView() {
@@ -81,11 +56,14 @@ public class ManageIvFolderActivity extends BaseActivity implements ListFolderAd
     }
 
     @Override
-    protected void initData(Bundle savedInstanceState) {
-        imageFolderDao = dataBase.getImageFolderDao();
+    public ImageFolderViewModel initViewModel() {
+        return new ViewModelProvider(this).get(ImageFolderViewModel.class);
+    }
 
-        imageFolderDao
-                .getAllImageFoldersLive()
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+
+        viewModel.getAllImageFoldersLive()
                 .observe(this, imageFolderEntities -> {
                     adapter.setImageFolders(imageFolderEntities);
                     adapter.notifyDataSetChanged();
@@ -94,16 +72,7 @@ public class ManageIvFolderActivity extends BaseActivity implements ListFolderAd
 
     @Override
     public void delete(List<ImageFolderEntity> imageFolderEntities) {
-        Observable.just(imageFolderEntities)
-                .compose(RxSchedulers.applyIO())
-                .subscribe(new SimpleConsumer<List<ImageFolderEntity>>() {
-                    @Override
-                    public void accept(List<ImageFolderEntity> imageFolderEntities) {
-                        for (ImageFolderEntity imageFolderEntity : imageFolderEntities) {
-                            imageFolderDao.deleteImageFolder(imageFolderEntity);
-                        }
-                    }
-                });
+        viewModel.delete(imageFolderEntities);
     }
 
     @Override

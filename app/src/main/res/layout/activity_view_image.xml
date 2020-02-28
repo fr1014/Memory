@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".imagefolder.ViewImageActivity">
+    tools:context=".imagefolder.images.ViewImageActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

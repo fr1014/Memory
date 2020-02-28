@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.fr.MyApplication;
 import com.fr.memroy.base.BaseActivity;
-import com.fr.memroy.imagefolder.AddFolderActivity;
+import com.fr.memroy.imagefolder.listfolder.AddFolderActivity;
 import com.fr.memroy.imagefolder.banner.ImageFolderFragment;
 import com.fr.memroy.imagefolder.listfolder.ManageIvFolderActivity;
 import com.fr.mypermission.Permission;

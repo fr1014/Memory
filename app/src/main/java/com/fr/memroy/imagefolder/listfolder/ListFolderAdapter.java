@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.fr.mediafile.utils.CommonUtils;
 import com.fr.memroy.R;
 import com.fr.memroy.data.room.entity.ImageFolderEntity;
-import com.fr.memroy.imagefolder.AddFolderActivity;
 
 import java.util.ArrayList;
 import java.util.List;

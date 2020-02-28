@@ -1,4 +1,4 @@
-package com.fr.memroy.imagefolder;
+package com.fr.memroy.imagefolder.listfolder;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.fr.mediafile.bean.Image;
@@ -19,19 +19,13 @@ import com.fr.mediafile.imageselect.ImageSelectActivity;
 import com.fr.mediafile.utils.ImageSelector;
 import com.fr.memroy.Constants;
 import com.fr.memroy.R;
-import com.fr.memroy.base.BaseActivity;
-import com.fr.memroy.data.room.dao.ImageFolderDao;
+import com.fr.memroy.base.BaseVMActivity;
 import com.fr.memroy.data.room.entity.ImageFolderEntity;
-import com.fr.memroy.rx.RxSchedulers;
-import com.fr.memroy.rx.SimpleConsumer;
 import com.fr.memroy.utils.CommonUtils;
 
 import java.util.List;
 
-import io.reactivex.Observable;
-
-public class AddFolderActivity extends BaseActivity implements View.OnClickListener {
-    private ImageFolderDao imageFolderDao;
+public class AddFolderActivity extends BaseVMActivity<ImageFolderViewModel> implements View.OnClickListener {
     private Toolbar toolbar;
     private ImageView ivAddCover;
     private EditText etName;
@@ -63,7 +57,6 @@ public class AddFolderActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void initView() {
         CommonUtils.setStatusBar(this, getColor(R.color.bg_black));
-        toolbar = findViewById(R.id.toolbar);
         ivAddCover = findViewById(R.id.add_cover);
         etName = findViewById(R.id.et_name);
         etMessage = findViewById(R.id.et_message);
@@ -71,27 +64,18 @@ public class AddFolderActivity extends BaseActivity implements View.OnClickListe
         ivAddCover.setOnClickListener(this);
         btCertain.setOnClickListener(this);
 
-        initToolbar();
-    }
-
-    private void initToolbar() {
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        initToolbar(findViewById(R.id.toolbar));
     }
 
     @Override
+    protected ImageFolderViewModel initViewModel() {
+        return new ViewModelProvider(this).get(ImageFolderViewModel.class);
+    }
+
+
+    @Override
     protected void initData(Bundle savedInstanceState) {
-        imageFolderDao = dataBase.getImageFolderDao();
+        viewModel = new ViewModelProvider(this).get(ImageFolderViewModel.class);
         initUpdateData();
     }
 
@@ -121,25 +105,10 @@ public class AddFolderActivity extends BaseActivity implements View.OnClickListe
                 if (initImageFolder()) {
                     ImageFolderEntity imageFolderEntity = new ImageFolderEntity(name, imagePath, message);
                     if (!isUpdate) {
-
-                        Observable.just(imageFolderEntity)
-                                .compose(RxSchedulers.applyIO())
-                                .subscribe(new SimpleConsumer<ImageFolderEntity>() {
-                                    @Override
-                                    public void accept(ImageFolderEntity imageFolderEntity) {
-                                        imageFolderDao.insertImageFolder(imageFolderEntity);
-                                    }
-                                });
+                        viewModel.insert(imageFolderEntity);
                     } else {
                         imageFolderEntity.setId(updateId);
-                        Observable.just(imageFolderEntity)
-                                .compose(RxSchedulers.applyIO())
-                                .subscribe(new SimpleConsumer<ImageFolderEntity>() {
-                                    @Override
-                                    public void accept(ImageFolderEntity imageFolderEntity) {
-                                        imageFolderDao.updateImageFolder(imageFolderEntity);
-                                    }
-                                });
+                        viewModel.update(imageFolderEntity);
                     }
                     finish();
                 }

@@ -1,27 +1,30 @@
 package com.fr.memroy.imagefolder.banner;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.fr.memroy.R;
-import com.fr.memroy.base.BaseFragment;
+import com.fr.memroy.base.BaseVMFragment;
 import com.fr.memroy.data.room.entity.ImageFolderEntity;
+import com.fr.memroy.imagefolder.listfolder.ImageFolderViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageFolderFragment extends BaseFragment {
+public class ImageFolderFragment extends BaseVMFragment {
     private ViewPager2 viewPager2;
     private ImageViewpagerAdapter adapter;
-    private LiveData<List<ImageFolderEntity>> imageFolderLive;
     private ImageFragmentListener listener;
+    private ImageFolderViewModel imageFolderViewModel;
 
     @Override
     protected int getLayoutId() {
@@ -41,13 +44,16 @@ public class ImageFolderFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-        imageFolderLive = dataBase.getImageFolderDao().getAllImageFoldersLive();
+        Activity activity = this.getActivity();
+        if (activity!=null){
+            imageFolderViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(ImageFolderViewModel.class);
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        imageFolderLive.observe(getViewLifecycleOwner(), imageFolderEntities -> {
+        imageFolderViewModel.getAllImageFoldersLive().observe(getViewLifecycleOwner(), imageFolderEntities -> {
 
             if (imageFolderEntities.size() != 0) {
                 listener.notifyData();
