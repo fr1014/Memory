@@ -92,6 +92,8 @@ public class ManageIvFolderActivity extends BaseVMActivity<ImageFolderViewModel>
                 break;
             case R.id.tv_delete:
                 if (adapter.delete()) {
+                    tvManage.setVisibility(View.VISIBLE);
+                    tvCancel.setVisibility(View.INVISIBLE);
                     adapter.setSelectVisible(false);
                     manageLayout.setVisibility(View.INVISIBLE);
                 }

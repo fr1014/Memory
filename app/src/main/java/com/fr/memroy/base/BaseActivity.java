@@ -36,10 +36,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void startActivity(Activity activity, Class clazz) {
         Intent intent = new Intent(activity, clazz);
         startActivity(intent);
+        overridePendingTransition(R.anim.activity_enter,R.anim.activity_exit);
     }
 
     protected void startActivityForResult(Activity activity, Class clazz, int requestCode) {
         Intent intent = new Intent(activity, clazz);
         startActivityForResult(intent, requestCode);
+        overridePendingTransition(R.anim.activity_enter,R.anim.activity_exit);
     }
+
 }
