@@ -1,4 +1,4 @@
-package com.fr.memroy.imagefolder.banner;
+package com.fr.memroy.imagefolder.listfolder.banner;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.fr.memroy.imagefolder.banner;
+package com.fr.memroy.imagefolder.listfolder.banner;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
