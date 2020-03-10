@@ -1,11 +1,15 @@
 package com.fr.memroy.data.room.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.Query;
 import androidx.room.Update;
 
 import com.fr.memroy.data.room.entity.ImageEntity;
+
+import java.util.List;
 
 /**
  * 创建时间:2020/2/18
@@ -23,6 +27,6 @@ public interface ImageDao {
     @Delete
     void deleteImages(ImageEntity...imageEntities);
 
-//    @Query("SELECT * FROM images ORDER BY ID DESC")
-//    List<Image> getAllImages();
+    @Query("SELECT * FROM images WHERE imageId IN (:imageId) ORDER BY ID DESC")
+    LiveData<List<ImageEntity>> getAllImagesLive(int imageId);
 }

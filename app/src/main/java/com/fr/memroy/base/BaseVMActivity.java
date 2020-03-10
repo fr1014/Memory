@@ -29,6 +29,8 @@ public abstract class BaseVMActivity<VM extends ViewModel> extends AppCompatActi
 
         CommonUtils.setStatusBar(this, getColor(R.color.bg_home));
 
+        initBundle();
+
         viewModel = initViewModel();
 
         initView();
@@ -36,6 +38,11 @@ public abstract class BaseVMActivity<VM extends ViewModel> extends AppCompatActi
     }
 
     protected abstract int getLayoutId();
+
+    protected void initBundle(){
+
+    }
+
     protected abstract void initView();
     protected abstract VM initViewModel();
     protected abstract void initData(Bundle savedInstanceState);

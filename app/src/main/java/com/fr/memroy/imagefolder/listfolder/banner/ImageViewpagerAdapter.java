@@ -1,6 +1,8 @@
 package com.fr.memroy.imagefolder.listfolder.banner;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.fr.memroy.R;
+import com.fr.memroy.data.room.entity.ImageFolderEntity;
+import com.fr.memroy.imagefolder.images.ViewImageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,16 +28,16 @@ public class ImageViewpagerAdapter extends RecyclerView.Adapter<ImageViewpagerAd
 
     private Context context;
     private LayoutInflater mInflater;
-    private List<String> imagePaths;
+    private List<ImageFolderEntity> folderEntities;
 
     public ImageViewpagerAdapter(Context context) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
-        imagePaths = new ArrayList<>();
+        folderEntities = new ArrayList<>();
     }
 
-    public void setData(List<String> imagePaths) {
-        this.imagePaths = imagePaths;
+    public void setData(List<ImageFolderEntity> folderEntities) {
+        this.folderEntities = folderEntities;
     }
 
     @NonNull
@@ -45,23 +49,30 @@ public class ImageViewpagerAdapter extends RecyclerView.Adapter<ImageViewpagerAd
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewpagerAdapter.ViewHolder holder, int position) {
-        if (imagePaths != null) {
+        if (folderEntities != null) {
             Glide.with(context)
-                    .load(imagePaths.get(position))
+                    .load(folderEntities.get(position).getImagePath())
                     .into(holder.imageView);
             holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ImageFolderEntity entity = folderEntities.get(holder.getAdapterPosition());
+                Intent intent = new Intent(context, ViewImageActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("image_id", entity.getId());
+                bundle.putString("folder_path", entity.getImagePath());
+                bundle.putString("folder_name", entity.getName());
+                intent.putExtra("folder", bundle);
+                context.startActivity(intent);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return imagePaths != null ? imagePaths.size() : 0;
+        return folderEntities != null ? folderEntities.size() : 0;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

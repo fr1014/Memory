@@ -14,11 +14,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.fr.memroy.R;
 import com.fr.memroy.base.BaseVMFragment;
-import com.fr.memroy.data.room.entity.ImageFolderEntity;
 import com.fr.memroy.imagefolder.listfolder.ImageFolderViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ImageFolderFragment extends BaseVMFragment {
     private ViewPager2 viewPager2;
@@ -58,11 +54,7 @@ public class ImageFolderFragment extends BaseVMFragment {
             if (imageFolderEntities.size() != 0) {
                 listener.notifyData();
                 viewPager2.setVisibility(View.VISIBLE);
-                List<String> imagePaths = new ArrayList<>();
-                for (ImageFolderEntity entity : imageFolderEntities) {
-                    imagePaths.add(entity.getImagePath());
-                }
-                adapter.setData(imagePaths);
+                adapter.setData(imageFolderEntities);
                 adapter.notifyDataSetChanged();
             }else {
                 viewPager2.setVisibility(View.GONE);
