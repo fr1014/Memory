@@ -9,10 +9,10 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.fr.mediafile.R;
 import com.fr.mediafile.bean.Image;
 import com.fr.mediafile.utils.CommonUtils;
+import com.fr.mediafile.utils.GlideUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +57,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     @Override
     public void onBindViewHolder(@NonNull final ImageViewHolder holder, final int position) {
         if (images != null) {
-            Glide.with(context)
-                    .load(images.get(position).getPath())
-                    .into(holder.imageView);
+
+            GlideUtils.load(images.get(position).getPath(), holder.imageView);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +82,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                     countSelected++;
                     listener.selectImage(imagesSelected);
                 } else {
-                    CommonUtils.ToastShort(context,"只能选择" + count + "张图片");
+                    CommonUtils.ToastShort(context, "只能选择" + count + "张图片");
                 }
             }
         });

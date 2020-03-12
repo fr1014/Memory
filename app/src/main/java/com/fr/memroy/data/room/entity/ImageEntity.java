@@ -59,4 +59,13 @@ public class ImageEntity {
     public void setImage(Image image) {
         this.image = image;
     }
+
+    @Override
+    public String toString() {
+        return "ImageEntity{" +
+                "id=" + id +
+                ", imageId=" + imageId +
+                ", image=" + image +
+                '}';
+    }
 }

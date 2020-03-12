@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.fr.mediafile.bean.Image;
 import com.fr.mediafile.imageselect.ImageSelectActivity;
@@ -31,6 +33,8 @@ public class ViewImageActivity extends BaseVMActivity<ImageViewModel> implements
     private TextView textView;
     private ImageView imageView;
     private FloatingActionButton floatingActionButton;
+    private RecyclerView recyclerView;
+    private ImagesAdapter adapter;
 
     @Override
     protected void initBundle() {
@@ -55,6 +59,15 @@ public class ViewImageActivity extends BaseVMActivity<ImageViewModel> implements
         floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(this);
         GlideUtils.load(folderPath, imageView);
+
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        recyclerView = findViewById(R.id.recycler_view);
+        adapter = new ImagesAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
     }
 
     @Override
@@ -62,12 +75,17 @@ public class ViewImageActivity extends BaseVMActivity<ImageViewModel> implements
         return new ViewModelProvider(this).get(ImageViewModel.class);
     }
 
+    private static final String TAG = "ViewImageActivity";
+
     @Override
     protected void initData(Bundle savedInstanceState) {
         viewModel.getAllImagesLive(imageId).observe(this, new Observer<List<ImageEntity>>() {
             @Override
             public void onChanged(List<ImageEntity> imageEntities) {
-
+                for (ImageEntity imageEntity : imageEntities) {
+                    Log.d(TAG, "onChanged: " + imageEntity.toString());
+                    adapter.setImageEntities(imageEntities);
+                }
             }
         });
     }
@@ -81,8 +99,6 @@ public class ViewImageActivity extends BaseVMActivity<ImageViewModel> implements
         }
     }
 
-    private static final String TAG = "ViewImageActivity";
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -90,7 +106,11 @@ public class ViewImageActivity extends BaseVMActivity<ImageViewModel> implements
             case REQUEST_CODE:
                 if (resultCode == RESULT_OK && data != null) {
                     ArrayList<Image> images = data.getParcelableArrayListExtra(ImageSelector.IMAGE_SELECTED);
-                    Log.d(TAG, "onActivityResult: " + images.toString());
+                    ImageEntity[] imageEntities = new ImageEntity[images.size()];
+                    for (int index = 0; index < images.size(); index++) {
+                        imageEntities[index] = new ImageEntity(imageId, images.get(index));
+                    }
+                    viewModel.insert(imageEntities);
                 }
                 break;
         }

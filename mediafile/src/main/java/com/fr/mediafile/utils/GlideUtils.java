@@ -1,9 +1,8 @@
-package com.fr.memroy.utils;
+package com.fr.mediafile.utils;
 
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.fr.mediafile.utils.FileManager;
 
 /**
  * 创建时间:2020/3/10

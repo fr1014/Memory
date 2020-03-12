@@ -10,9 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.fr.mediafile.R;
 import com.fr.mediafile.bean.ImgFolder;
+import com.fr.mediafile.utils.GlideUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +54,9 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderView
         holder.tvName.setText(name);
         holder.tvNum.setText("(" + num + ")");
         holder.ivSelected.setVisibility(mSelectPosition == position ? View.VISIBLE : View.INVISIBLE);
-        Glide.with(mContext)
-                .load(imgPath)
-                .into(holder.ivFirst);
+
+        GlideUtils.load(imgPath,holder.ivFirst);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

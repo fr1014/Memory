@@ -1,6 +1,7 @@
 package com.fr.mediafile.utils;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.provider.MediaStore;
 import com.fr.mediafile.bean.Image;
 import com.fr.mediafile.bean.ImgFolder;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -111,6 +113,27 @@ public class FileManager {
         folders.add(newFolder);
         return newFolder;
     }
+
+    public static Uri getImageContentUri(Context context, String path) {
+        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[] { MediaStore.Images.Media._ID }, MediaStore.Images.Media.DATA + "=? ",
+                new String[] { path }, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            Uri baseUri = Uri.parse("content://media/external/images/media");
+            return Uri.withAppendedPath(baseUri, "" + id);
+        } else {
+            // 如果图片不在手机的共享图片数据库，就先把它插入。
+            if (new File(path).exists()) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DATA, path);
+                return context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            } else {
+                return null;
+            }
+        }
+    }
+
 
     public interface DataCallBack {
         void onSuccess(ArrayList<ImgFolder> folders);
