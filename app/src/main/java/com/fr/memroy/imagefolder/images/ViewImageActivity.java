@@ -26,7 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewImageActivity extends BaseVMActivity<ImageViewModel> implements View.OnClickListener {
-    private static final int REQUEST_CODE = 1;
+    public static final int REQUEST_CODE = 1;
+    public static final int REQUEST_CODE_IMAGES_ADAPTER = 2;
     private int imageId;
     private String folderName;
     private String folderPath;
@@ -66,8 +67,9 @@ public class ViewImageActivity extends BaseVMActivity<ImageViewModel> implements
     private void initRecyclerView() {
         recyclerView = findViewById(R.id.recycler_view);
         adapter = new ImagesAdapter(this);
+        adapter.setViewModel(viewModel);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
     }
 
     @Override
@@ -111,6 +113,14 @@ public class ViewImageActivity extends BaseVMActivity<ImageViewModel> implements
                         imageEntities[index] = new ImageEntity(imageId, images.get(index));
                     }
                     viewModel.insert(imageEntities);
+                }
+                break;
+            case REQUEST_CODE_IMAGES_ADAPTER:
+                if (resultCode == RESULT_OK && data != null) {
+                    ArrayList<Image> images = data.getParcelableArrayListExtra(ImageSelector.IMAGE_SELECTED);
+                    assert images != null;
+                    ImageEntity imageEntity = new ImageEntity(imageId, images.get(0));
+                    viewModel.getImageEntityLiveData().setValue(imageEntity);
                 }
                 break;
         }

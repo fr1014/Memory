@@ -11,10 +11,10 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.fr.memroy.R;
 import com.fr.memroy.data.room.entity.ImageFolderEntity;
 import com.fr.memroy.imagefolder.images.ViewImageActivity;
+import com.fr.memroy.utils.GlideUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +50,7 @@ public class ImageViewpagerAdapter extends RecyclerView.Adapter<ImageViewpagerAd
     @Override
     public void onBindViewHolder(@NonNull ImageViewpagerAdapter.ViewHolder holder, int position) {
         if (folderEntities != null) {
-            Glide.with(context)
-                    .load(folderEntities.get(position).getImagePath())
-                    .into(holder.imageView);
+            GlideUtils.load(folderEntities.get(position).getImagePath(),holder.imageView);
             holder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         holder.imageView.setOnClickListener(new View.OnClickListener() {

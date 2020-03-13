@@ -1,6 +1,7 @@
 package com.fr.memroy.imagefolder.images;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.fr.MyApplication;
@@ -22,10 +23,18 @@ import io.reactivex.Observable;
 public class ImageViewModel extends ViewModel {
     private LiveData<List<ImageEntity>> allImagesLive;
     private ImageDao imageDao;
+    private MutableLiveData<ImageEntity> imageEntityLiveData; //adapter中更换图片
 
     public ImageViewModel() {
         AppDataBase dataBase = MyApplication.getInstance().getDataBase();
         imageDao = dataBase.getImageDao();
+    }
+
+    public MutableLiveData<ImageEntity> getImageEntityLiveData(){
+        if (imageEntityLiveData ==null){
+            imageEntityLiveData = new MutableLiveData<>();
+        }
+        return imageEntityLiveData;
     }
 
     public LiveData<List<ImageEntity>> getAllImagesLive(int imageId) {

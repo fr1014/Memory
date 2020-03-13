@@ -11,10 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.fr.mediafile.utils.CommonUtils;
 import com.fr.memroy.R;
 import com.fr.memroy.data.room.entity.ImageFolderEntity;
+import com.fr.memroy.utils.GlideUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
  * 作者:fr
  * 邮箱:1546352238@qq.com
  */
-public class ListFolderAdapter extends RecyclerView.Adapter<ListFolderAdapter.ViewHolder> {
+public class ListFolderManageAdapter extends RecyclerView.Adapter<ListFolderManageAdapter.ViewHolder> {
     private Context context;
     private List<ImageFolderEntity> imageFolderEntities;
     private LayoutInflater inflater;
@@ -32,7 +32,7 @@ public class ListFolderAdapter extends RecyclerView.Adapter<ListFolderAdapter.Vi
     private Boolean visibly = false;
     private List<ImageFolderEntity> manageFolders;
 
-    public ListFolderAdapter(Context context) {
+    public ListFolderManageAdapter(Context context) {
         this.context = context;
         imageFolderEntities = new ArrayList<>();
         inflater = LayoutInflater.from(context);
@@ -64,19 +64,18 @@ public class ListFolderAdapter extends RecyclerView.Adapter<ListFolderAdapter.Vi
 
     @NonNull
     @Override
-    public ListFolderAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ListFolderManageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_manage_ivfolder, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListFolderAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ListFolderManageAdapter.ViewHolder holder, int position) {
         ImageFolderEntity imageFolderEntity = imageFolderEntities.get(position);
         holder.textView.setText(imageFolderEntity.getName());
-        Glide
-                .with(context)
-                .load(imageFolderEntity.getImagePath())
-                .into(holder.imageView);
+
+        GlideUtils.load(imageFolderEntity.getImagePath(),holder.imageView);
+
         if (visibly) {
             holder.selected.setVisibility(View.GONE);
             holder.unSelected.setVisibility(View.VISIBLE);

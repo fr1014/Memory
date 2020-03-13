@@ -16,8 +16,8 @@ import com.fr.memroy.data.room.entity.ImageFolderEntity;
 
 import java.util.List;
 
-public class ManageIvFolderActivity extends BaseVMActivity<ImageFolderViewModel> implements ListFolderAdapter.ListFolderListener, View.OnClickListener {
-    private ListFolderAdapter adapter;
+public class ManageIvFolderActivity extends BaseVMActivity<ImageFolderViewModel> implements ListFolderManageAdapter.ListFolderListener, View.OnClickListener {
+    private ListFolderManageAdapter adapter;
     private ConstraintLayout manageLayout;
     private TextView tvManage;
     private TextView tvCancel;
@@ -46,7 +46,7 @@ public class ManageIvFolderActivity extends BaseVMActivity<ImageFolderViewModel>
 
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.rv_folder);
-        adapter = new ListFolderAdapter(this);
+        adapter = new ListFolderManageAdapter(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new CustomItemDecoration());

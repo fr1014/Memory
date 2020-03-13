@@ -4,11 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fr.mediafile.imageselect.ImageSelectActivity;
 import com.fr.memroy.R;
 import com.fr.memroy.data.room.entity.ImageEntity;
 import com.fr.memroy.utils.GlideUtils;
@@ -25,6 +29,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
     private Context context;
     private List<ImageEntity> imageEntities;
     private LayoutInflater inflater;
+    private ImageViewModel viewModel;
 
     public ImagesAdapter(Context context) {
         this.context = context;
@@ -35,6 +40,10 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
     public void setImageEntities(List<ImageEntity> imageEntities) {
         this.imageEntities = imageEntities;
         notifyDataSetChanged();
+    }
+
+    public void setViewModel(ImageViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
     @NonNull
@@ -49,6 +58,27 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
         ImageView imageView = holder.imageView;
         String path = imageEntities.get(holder.getAdapterPosition()).getImage().getPath();
         GlideUtils.load(path, imageView);
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.delete(imageEntities.get(holder.getAdapterPosition()));
+            }
+        });
+        holder.btnReplace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageEntity imageEntity = imageEntities.get(position);
+                int id = imageEntity.getId();
+                ImageSelectActivity.startActivity((ViewImageActivity) context, ViewImageActivity.REQUEST_CODE_IMAGES_ADAPTER, 1);
+                viewModel.getImageEntityLiveData().observe((LifecycleOwner) context, new Observer<ImageEntity>() {
+                    @Override
+                    public void onChanged(ImageEntity imageEntity) {
+                        imageEntity.setId(id);
+                        viewModel.update(imageEntity);
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -58,10 +88,14 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
+        private Button btnDelete;
+        private Button btnReplace;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
+            btnReplace = itemView.findViewById(R.id.btnReplace);
         }
     }
 }
