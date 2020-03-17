@@ -22,6 +22,7 @@ import com.fr.memroy.R;
 import com.fr.memroy.base.BaseVMActivity;
 import com.fr.memroy.data.room.entity.ImageFolderEntity;
 import com.fr.memroy.utils.CommonUtils;
+import com.fr.memroy.utils.GlideUtils;
 
 import java.util.List;
 
@@ -89,9 +90,7 @@ public class AddFolderActivity extends BaseVMActivity<ImageFolderViewModel> impl
             message = bundle.getString(Constants.IMAGE_MESSAGE);
             etName.setText(name);
             etMessage.setText(message);
-            Glide.with(this)
-                    .load(imagePath)
-                    .into(ivAddCover);
+            GlideUtils.load(imagePath,ivAddCover);
         }
     }
 
