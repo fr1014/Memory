@@ -3,6 +3,7 @@ package com.fr.mediafile.bean;
 import com.fr.mediafile.utils.CommonUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 创建时间：2020/2/9
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  */
 public class ImgFolder {
     private String name;
-    private ArrayList<Image> images;
+    private List<Image> images;
 
     public ImgFolder(String name) {
         this.name = name;
@@ -30,7 +31,7 @@ public class ImgFolder {
         this.name = name;
     }
 
-    public ArrayList<Image> getImages() {
+    public List<Image> getImages() {
         return images;
     }
 

@@ -8,11 +8,12 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.fr.mediafile.bean.Image;
-import com.fr.mediafile.bean.ImgFolder;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 创建时间：2020/2/9
@@ -28,7 +29,8 @@ public class FileManager {
             public void run() {
                 //扫描图片
                 Uri imgUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                ArrayList<Image> images = new ArrayList<>();
+                List<Image> images = new ArrayList<>();
+                HashMap<String, List<Image>> folders = new HashMap<>();//所有图片
                 ContentResolver mContentResolver = context.getContentResolver();
                 /*
                  * uri使用content：//方案的URI，用于检索的内容。
@@ -58,66 +60,78 @@ public class FileManager {
                         long time = c.getLong(c.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
                         //获取图片类型
                         String mimeType = c.getString(c.getColumnIndex(MediaStore.Images.Media.MIME_TYPE));
-                        //过滤未下载完成或者不存在的文件
-                        if (!"downloading".equals(FileUtils.getExtensionName(path)) && FileUtils.checkImgExists(path)) {
-                            images.add(new Image(path, time, name, mimeType));
+
+                        //用于展示相册初始化界面
+                        images.add(new Image(path, time, name, mimeType));
+
+                        String folderName = FileUtils.getFolderName(path);    //文件夹名称
+                        if (folders.containsKey(folderName)) {
+                            List<Image> data = folders.get(folderName);
+                            data.add(new Image(path, time, name, mimeType));
+                        } else {
+                            List<Image> data = new ArrayList<>();
+                            data.add(new Image(path, time, name, mimeType));
+                            folders.put(folderName, data);
                         }
+
                     }
                     c.close();
                 }
                 Collections.reverse(images);
-                callBack.onSuccess(splitFolder(images));
+                callBack.onSuccess(images, folders);
             }
         }).start();
     }
 
     private static final String TAG = "FileManager";
-    /**
-     * 把图片按文件夹拆分，第一个文件夹保存所有的图片
-     *
-     * @param images 图片集合
-     * @return 将全部图片拆分到文件夹中
-     */
-    private static ArrayList<ImgFolder> splitFolder(ArrayList<Image> images) {
-        ArrayList<ImgFolder> folders = new ArrayList<>();
-        folders.add(new ImgFolder("全部图片", images));
-        if (images != null && !images.isEmpty()) {
-            for (int i = 0; i < images.size(); i++) {
-                String path = images.get(i).getPath();      //图片路径
-                String folderName = FileUtils.getFolderName(path);    //文件夹名称
-                if (CommonUtils.isNotEmptyString(folderName)) {
-                    ImgFolder folder = getImgFolder(folderName, folders);
-                    folder.addImage(images.get(i));
-                }
-            }
-        }
-        return folders;
-    }
 
-    /**
-     * 根据通过getFolderName(path)获取到的文件夹名称来创建文件夹
-     * @param folderName getFolderName(path)获取的文件夹名称
-     * @param folders 已经创建的文件夹
-     * @return 当前文件夹的名称
-     */
-    private static ImgFolder getImgFolder(String folderName, ArrayList<ImgFolder> folders) {
-        if (!folders.isEmpty()) {
-            for (int i = 0; i < folders.size(); i++) {
-                ImgFolder imgFolder = folders.get(i);
-                if (folderName.equals(imgFolder.getName())){
-                    return imgFolder;
-                }
-            }
-        }
-        ImgFolder newFolder = new ImgFolder(folderName);
-        folders.add(newFolder);
-        return newFolder;
-    }
+//    /**
+//     * 把图片按文件夹拆分，第一个文件夹保存所有的图片
+//     *
+//     * @param images 图片集合
+//     * @return 将全部图片拆分到文件夹中
+//     */
+//    private static ArrayList<ImgFolder> splitFolder(ArrayList<Image> images) {
+//        ArrayList<ImgFolder> folders = new ArrayList<>();
+//        folders.add(new ImgFolder("全部图片", images));
+//        if (images != null && !images.isEmpty()) {
+//            for (int i = 0; i < images.size(); i++) {
+//                String path = images.get(i).getPath();      //图片路径
+//                String folderName = FileUtils.getFolderName(path);    //文件夹名称
+//                if (CommonUtils.isNotEmptyString(folderName)) {
+//                    ImgFolder folder = getImgFolder(folderName, folders);
+//                    folder.addImage(images.get(i));
+//                }
+//            }
+//        }
+//        return folders;
+//    }
+//
+//    /**
+//     * 根据通过getFolderName(path)获取到的文件夹名称来创建文件夹
+//     *
+//     * @param folderName getFolderName(path)获取的文件夹名称
+//     * @param folders    已经创建的文件夹
+//     * @return 当前文件夹的名称
+//     */
+//    private static ImgFolder getImgFolder(String folderName, ArrayList<ImgFolder> folders) {
+//        if (!folders.isEmpty()) {
+//            for (int i = 0; i < folders.size(); i++) {
+//                ImgFolder imgFolder = folders.get(i);
+//                if (folderName.equals(imgFolder.getName())) {
+//                    return imgFolder;
+//                }
+//            }
+//        }
+//        ImgFolder newFolder = new ImgFolder(folderName);
+//        folders.add(newFolder);
+//        return newFolder;
+//    }
 
     public static Uri getImageContentUri(Context context, String path) {
         Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[] { MediaStore.Images.Media._ID }, MediaStore.Images.Media.DATA + "=? ",
-                new String[] { path }, null);
+                new String[]{MediaStore.Images.Media._ID}, MediaStore.Images.Media.DATA + "=? ",
+                new String[]{path}, null);
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
             Uri baseUri = Uri.parse("content://media/external/images/media");
@@ -136,7 +150,8 @@ public class FileManager {
 
 
     public interface DataCallBack {
-        void onSuccess(ArrayList<ImgFolder> folders);
+        //        void onSuccess(ArrayList<ImgFolder> folders);
+        void onSuccess(List<Image> images, HashMap<String, List<Image>> folders);
 
         void onFile();
     }

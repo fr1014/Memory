@@ -40,6 +40,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     //设置图片源
     public void setImages(List<Image> images) {
         this.images = images;
+        notifyDataSetChanged();
     }
 
     //设置最多可选择的图片数量
