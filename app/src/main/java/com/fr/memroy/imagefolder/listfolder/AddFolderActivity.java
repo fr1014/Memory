@@ -13,9 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
 import com.fr.mediafile.bean.Image;
-import com.fr.mediafile.imageselect.ImageSelectActivity;
+import com.fr.mediafile.imageselect.activity.ImageSelectActivity;
 import com.fr.mediafile.utils.ImageSelector;
 import com.fr.memroy.Constants;
 import com.fr.memroy.R;
@@ -90,7 +89,7 @@ public class AddFolderActivity extends BaseVMActivity<ImageFolderViewModel> impl
             message = bundle.getString(Constants.IMAGE_MESSAGE);
             etName.setText(name);
             etMessage.setText(message);
-            GlideUtils.load(imagePath,ivAddCover);
+            GlideUtils.load(imagePath, ivAddCover);
         }
     }
 
@@ -133,9 +132,7 @@ public class AddFolderActivity extends BaseVMActivity<ImageFolderViewModel> impl
                 List<Image> images = data.getParcelableArrayListExtra(ImageSelector.IMAGE_SELECTED);
                 if (images != null) {
                     imagePath = images.get(0).getPath();
-                    Glide.with(this)
-                            .load(imagePath)
-                            .into(ivAddCover);
+                    GlideUtils.load(imagePath, ivAddCover);
                 }
             }
         }

@@ -3,8 +3,10 @@
     package="com.fr.mediafile">
 
     <application>
+        <activity android:name=".imageselect.activity.VideoSelectActivity"/>
+        <activity android:name=".imageselect.MediaSelectActivity" />
         <activity
-            android:name=".imageselect.ImageSelectActivity"
+            android:name=".imageselect.activity.ImageSelectActivity"
             android:launchMode="standard"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>

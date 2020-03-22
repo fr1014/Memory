@@ -1,4 +1,4 @@
-package com.fr.mediafile.imageselect;
+package com.fr.mediafile.imageselect.images;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,7 +16,6 @@ import com.fr.mediafile.utils.GlideUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -27,23 +26,25 @@ import java.util.List;
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderViewHolder> {
     private Context mContext;
     private int mSelectPosition = 0;
-    HashMap<String, List<Image>> folders;
-    List<String> folderNames;
+    HashMap<String, List<Image>> imageFolders;
+    List<String> imgFolderNames;
+
     private SelectFolderListener listener;
 
     public FolderAdapter(Context context, SelectFolderListener listener) {
         this.mContext = context;
         this.listener = listener;
-        folders = new HashMap<>();
-        folderNames = new ArrayList<>();
+        imageFolders = new HashMap<>();
+        imgFolderNames = new ArrayList<>();
+
     }
 
-    public void setFolders(LinkedHashMap<String, List<Image>> folders) {
-        this.folders = folders;
-        for (HashMap.Entry<String, List<Image>> stringListEntry : folders.entrySet()) {
+    public void setImageFolders(HashMap<String, List<Image>> imageFolders) {
+        this.imageFolders = imageFolders;
+        for (HashMap.Entry<String, List<Image>> stringListEntry : imageFolders.entrySet()) {
             String key;
             key = (String) ((HashMap.Entry) stringListEntry).getKey();
-            folderNames.add(key);
+            imgFolderNames.add(key);
         }
         notifyDataSetChanged();
     }
@@ -57,10 +58,10 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderView
 
     @Override
     public void onBindViewHolder(@NonNull final FolderAdapter.FolderViewHolder holder, int position) {
-        final List<Image> images = folders.get(folderNames.get(position));
+        final String name = imgFolderNames.get(position);
+        final List<Image> images = imageFolders.get(name);
         if (images != null) {
             int num = images.size();
-            final String name = folderNames.get(position);
             String imgPath = images.get(0).getPath();
             holder.tvName.setText(name);
             holder.tvNum.setText("(" + num + ")");
@@ -80,14 +81,14 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderView
 
     @Override
     public int getItemCount() {
-        return folders != null ? folders.size() : 0;
+        return imageFolders != null ? imageFolders.size() : 0;
     }
 
-    public class FolderViewHolder extends RecyclerView.ViewHolder {
-        private ImageView ivFirst;
-        private ImageView ivSelected;
-        private TextView tvName;
-        private TextView tvNum;
+    public static class FolderViewHolder extends RecyclerView.ViewHolder {
+        public ImageView ivFirst;
+        public ImageView ivSelected;
+        public TextView tvName;
+        public TextView tvNum;
 
         public FolderViewHolder(@NonNull View itemView) {
             super(itemView);

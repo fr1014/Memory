@@ -8,12 +8,17 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.fr.mediafile.bean.Image;
+import com.fr.mediafile.bean.Video;
+import com.fr.mediafile.imageselect.SelectViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.fr.mediafile.utils.FileUtils.checkImgExists;
+import static com.fr.mediafile.utils.FileUtils.getExtensionName;
 
 /**
  * 创建时间：2020/2/9
@@ -61,17 +66,21 @@ public class FileManager {
                         //获取图片类型
                         String mimeType = c.getString(c.getColumnIndex(MediaStore.Images.Media.MIME_TYPE));
 
-                        //用于展示相册初始化界面
-                        images.add(new Image(path, time, name, mimeType));
-
                         String folderName = FileUtils.getFolderName(path);    //文件夹名称
-                        if (folders.containsKey(folderName)) {
-                            List<Image> data = folders.get(folderName);
-                            data.add(new Image(path, time, name, mimeType));
-                        } else {
-                            List<Image> data = new ArrayList<>();
-                            data.add(new Image(path, time, name, mimeType));
-                            folders.put(folderName, data);
+
+                        //过滤未下载完成或者不存在的文件
+                        if (!"downloading".equals(getExtensionName(path)) && checkImgExists(path)) {
+                            //用于展示相册初始化界面
+                            images.add(new Image(path, time, name, mimeType));
+
+                            if (folders.containsKey(folderName)) {
+                                List<Image> data = folders.get(folderName);
+                                data.add(new Image(path, time, name, mimeType));
+                            } else {
+                                List<Image> data = new ArrayList<>();
+                                data.add(new Image(path, time, name, mimeType));
+                                folders.put(folderName, data);
+                            }
                         }
 
                     }
@@ -79,6 +88,77 @@ public class FileManager {
                 }
                 Collections.reverse(images);
                 callBack.onSuccess(images, folders);
+            }
+        }).start();
+    }
+
+    /**
+     * 获取手机中所有视频的信息
+     */
+    public static void loadAudioFromSDCard(final Context context, final SelectViewModel viewModel) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HashMap<String, List<Video>> folders = new HashMap<>();//所有照片
+                Uri mImageUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+//                String[] proj = {MediaStore.Video.Thumbnails._ID
+//                        , MediaStore.Video.Thumbnails.DATA
+//                        , MediaStore.Video.Media.DURATION
+//                        , MediaStore.Video.Media.SIZE
+//                        , MediaStore.Video.Media.DISPLAY_NAME
+//                        , MediaStore.Video.Media.DATE_MODIFIED};
+                Cursor mCursor = context.getContentResolver().query(mImageUri,
+                        null,
+                        null,
+                        null,
+                        MediaStore.Video.Media.DATE_ADDED);
+                if (mCursor != null) {
+                    while (mCursor.moveToNext()) {
+                        // 获取视频的路径
+                        String path = mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));// 路径
+                        if (!FileUtils.isExists(path)) {
+                            continue;
+                        }
+
+                        int id = mCursor.getInt(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID));// 视频的id
+                        String name = mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)); // 视频名称
+                        String resolution = mCursor.getString(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION)); //分辨率
+                        long size = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));// 大小
+                        long duration = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));// 时长
+                        long date = mCursor.getLong(mCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_MODIFIED));//修改时间
+                        if (size < 0) {
+                            //某些设备获取size<0，直接计算
+                            size = new File(path).length() / 1024;
+                        }
+
+                        //提前生成缩略图，再获取：http://stackoverflow.com/questions/27903264/how-to-get-the-video-thumbnail-path-and-not-the-bitmap
+                        MediaStore.Video.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Video.Thumbnails.MICRO_KIND, null);
+                        String[] projection = {MediaStore.Video.Thumbnails._ID, MediaStore.Video.Thumbnails.DATA};
+                        Cursor cursor = context.getContentResolver().query(MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI
+                                , projection
+                                , MediaStore.Video.Thumbnails.VIDEO_ID + "=?"
+                                , new String[]{id + ""}
+                                , null);
+                        String thumbPath = "";
+                        while (cursor.moveToNext()) {
+                            thumbPath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Thumbnails.DATA));
+                        }
+                        cursor.close();
+                        // 获取该视频的父路径名
+                        String dirPath = FileUtils.getFolderName(path);
+                        //存储对应关系
+                        if (folders.containsKey(dirPath)) {
+                            List<Video> data = folders.get(dirPath);
+                            data.add(new Video(id, path, name, resolution, size, date, duration, thumbPath));
+                        } else {
+                            List<Video> data = new ArrayList<>();
+                            data.add(new Video(id, path, name, resolution, size, date, duration, thumbPath));
+                            folders.put(dirPath, data);
+                        }
+                    }
+                    mCursor.close();
+                }
+                viewModel.getVideoFolders().postValue(folders);
             }
         }).start();
     }

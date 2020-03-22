@@ -1,4 +1,4 @@
-package com.fr.mediafile.imageselect;
+package com.fr.mediafile.imageselect.images;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -58,7 +58,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     @Override
     public void onBindViewHolder(@NonNull final ImageViewHolder holder, final int position) {
         if (images != null) {
-
             GlideUtils.load(images.get(position).getPath(), holder.imageView);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -94,10 +93,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         return images != null ? images.size() : 0;
     }
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
-        private ImageView unSelect;
-        private ImageView selected;
+    static class ImageViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+        ImageView unSelect;
+        ImageView selected;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fr.mediafile.bean.Image;
-import com.fr.mediafile.imageselect.ImageSelectActivity;
+import com.fr.mediafile.imageselect.activity.ImageSelectActivity;
 import com.fr.mediafile.utils.ImageSelector;
 import com.fr.memroy.R;
 import com.fr.memroy.base.BaseVMActivity;

@@ -12,7 +12,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fr.mediafile.imageselect.ImageSelectActivity;
+import com.fr.mediafile.imageselect.activity.ImageSelectActivity;
 import com.fr.memroy.R;
 import com.fr.memroy.data.room.entity.ImageEntity;
 import com.fr.memroy.utils.GlideUtils;

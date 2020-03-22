@@ -11,19 +11,21 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
 import com.fr.MyApplication;
+import com.fr.mediafile.imageselect.activity.VideoSelectActivity;
 import com.fr.memroy.base.BaseActivity;
 import com.fr.memroy.imagefolder.listfolder.AddFolderActivity;
-import com.fr.memroy.imagefolder.listfolder.banner.ImageFolderFragment;
 import com.fr.memroy.imagefolder.listfolder.ManageIvFolderActivity;
+import com.fr.memroy.imagefolder.listfolder.banner.ImageFolderFragment;
 import com.fr.mypermission.Permission;
 import com.fr.mypermission.PermissionListener;
 import com.fr.mypermission.PermissionUtils;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, ImageFolderFragment.ImageFragmentListener {
 
-    private CardView cardView;
+    private CardView addImage;
     private TextView addIVFolder;
     private TextView tvIVFolder;
+    private CardView addVideo;
     private FragmentContainerView imageContainerView;
 
     @Override
@@ -34,12 +36,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void initView() {
 
-        cardView = findViewById(R.id.add_image);
+        addImage = findViewById(R.id.add_image);
+        addVideo = findViewById(R.id.add_audio);
         addIVFolder = findViewById(R.id.tv_add_ivfolder);
         tvIVFolder = findViewById(R.id.tv_image);
         imageContainerView = findViewById(R.id.fragment_image_folder);
 
-        cardView.setOnClickListener(this);
+        addImage.setOnClickListener(this);
+        addVideo.setOnClickListener(this);
         addIVFolder.setOnClickListener(this);
         tvIVFolder.setOnClickListener(this);
 
@@ -73,7 +77,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         ImageFolderFragment fragment = new ImageFolderFragment();
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.fragment_image_folder,fragment)
+                .replace(R.id.fragment_image_folder, fragment)
                 .commit();
     }
 
@@ -87,6 +91,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.tv_image:
                 startActivity(MainActivity.this, ManageIvFolderActivity.class);
                 break;
+            case R.id.add_audio:
+                startActivity(MainActivity.this, VideoSelectActivity.class);
+                break;
         }
     }
 
@@ -97,14 +104,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void notifyData() {
-        cardView.setVisibility(View.GONE);
+        addImage.setVisibility(View.GONE);
         addIVFolder.setVisibility(View.VISIBLE);
         imageContainerView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void notifyNoData() {
-        cardView.setVisibility(View.VISIBLE);
+        addImage.setVisibility(View.VISIBLE);
         addIVFolder.setVisibility(View.GONE);
         imageContainerView.setVisibility(View.GONE);
     }
